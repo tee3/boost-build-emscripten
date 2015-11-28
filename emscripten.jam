@@ -83,8 +83,6 @@ generators.register-c-compiler emscripten.compile.c : C : OBJ : <toolset>emscrip
 
 # Declare flags
 
-# Compiler
-
 toolset.flags emscripten.compile OPTIONS <optimization>off   : -O0 ;
 toolset.flags emscripten.compile OPTIONS <optimization>speed : -O3 ;
 toolset.flags emscripten.compile OPTIONS <optimization>space : -Os ;
@@ -110,6 +108,17 @@ toolset.flags emscripten.compile DEFINES <define> ;
 toolset.flags emscripten.compile INCLUDES <include> ;
 toolset.flags emscripten.compile.c++ TEMPLATE_DEPTH <c++-template-depth> ;
 toolset.flags emscripten.compile.fortran USER_OPTIONS <fflags> ;
+
+toolset.flags emscripten.link DEFAULTS : -Wno-warn-absolute-paths ;
+
+toolset.flags emscripten.link LIBRARY_PATH <library-path> ;
+toolset.flags emscripten.link FINDLIBS_ST <find-static-library> ;
+toolset.flags emscripten.link FINDLIBS_SA <find-shared-library> ;
+toolset.flags emscripten.link LIBRARIES <library-file> ;
+
+toolset.flags emscripten.link OPTIONS <linkflags> ;
+
+toolset.flags emscripten.archive AROPTIONS <archiveflags> ;
 
 rule compile.c++ ( targets * : sources * : properties * )
 {
@@ -146,25 +155,10 @@ actions compile.c.preprocess
     "$(CONFIG_COMMAND)" $(LANG) $(OPTIONS) $(USER_OPTIONS) -D$(DEFINES) -I"$(INCLUDES)" "$(>)" -E >$(<)
 }
 
-# Linker
-# @todo add standard library based on processor and endianess settings
-# @todo endianess left at default for now.
-toolset.flags emscripten.link DEFAULTS : -Wno-warn-absolute-paths ;
-
-toolset.flags emscripten.link LIBRARY_PATH <library-path> ;
-toolset.flags emscripten.link FINDLIBS_ST <find-static-library> ;
-toolset.flags emscripten.link FINDLIBS_SA <find-shared-library> ;
-toolset.flags emscripten.link LIBRARIES <library-file> ;
-
-toolset.flags emscripten.link OPTIONS <linkflags> ;
-
 actions link
 {
   "$(CONFIG_COMMAND)" $(DEFAULTS) $(OPTIONS) -L"$(LIBRARY_PATH:W)" -L"$(STDLIBPATH:W)" -o "$(<:W)" "$(>:W)" -l"$(LIBRARIES:W)" -l"$(STDLIBRARIES:W)"
 }
-
-# Archiver
-toolset.flags emscripten.archive AROPTIONS <archiveflags> ;
 
 RM = [ common.rm-command ] ;
 actions piecemeal archive
