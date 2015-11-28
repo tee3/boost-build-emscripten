@@ -15,8 +15,13 @@ Toolset
 See the `documentation <emscripten.rst>`__ and the `implementation
 <emscripten.jam>`__ for the ``emscripten`` toolset.
 
-Example Project
-----------------
+Testing
+-------
 
-See the `documentation <example/README.rst>`__ for the `example
-project <example>`__.
+This project can be tested using the `Boost.Build Toolset Tester
+<https://github.com/tee3/boost-build-toolset-tester>`__.  There is a
+branch ``devel-emscripten``, which configures the toolset.
+
+.. code:: sh
+
+   $ b2 --test-config=user-config.jam toolset=emscripten link=static
