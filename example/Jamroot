@@ -8,10 +8,8 @@ project
     <link>static
   ;
 
+run hello.cpp ;
+
+compile a.cpp ;
 lib liba : a.cpp ;
-
-exe hello : hello.cpp ;
-
-run test_pass.cpp ;
-
 run test_a.cpp liba ;
