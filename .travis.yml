@@ -1,0 +1,12 @@
+sudo: required
+os:
+  - linux
+  - osx
+before_install:
+  - if [ ${TRAVIS_OS_NAME} = "linux" ] ; then sudo apt-get update -qq && sudo apt-get install -y emscripten ; fi
+  - if [ ${TRAVIS_OS_NAME} = "osx" ] ; then brew update && brew outdated emscripten && brew install emscripten ; fi
+install:
+  - ./.travis-boost-build-stage.sh
+  - git clone --branch=devel-emscripten https://github.com/tee3/boost-build-toolset-tester.git ../boost-build-toolset-tester
+script:
+  - cd ../boost-build-toolset-tester && BOOST_BUILD_PATH=/tmp/build /tmp/build/b2 --test-config=user-config.jam
