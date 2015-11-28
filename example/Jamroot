@@ -1,5 +1,13 @@
 import testing ;
 
+project
+  : default-build
+    <toolset>emscripten
+
+    # @todo until we have dynamic linking
+    <link>static
+  ;
+
 lib liba : a.cpp ;
 
 exe hello : hello.cpp ;
